@@ -142,11 +142,11 @@ func NewLoadableLRUCache(loader Loader, maxEntries int) *LoadableLRUCache {
 //
 // The onEvicted callback will be called after the key and value
 // being deleted, manually or automatically.
-func NewLoadableLRUCacheWithOnEvicted(loader Loader, maxEntries int, onEvicted func(lru.Key, interface{})) *LoadableLRUCache {
+func NewLoadableLRUCacheWithOnEvicted(loader Loader, maxEntries int, onEvicted func(interface{}, interface{})) *LoadableLRUCache {
 	return &LoadableLRUCache{loader: loader, data: &lru.Cache{MaxEntries: maxEntries, OnEvicted: onEntryEvicted(onEvicted)}}
 }
 
-func onEntryEvicted(onEvicted func(lru.Key, interface{})) func(lru.Key, interface{}) {
+func onEntryEvicted(onEvicted func(interface{}, interface{})) func(lru.Key, interface{}) {
 	return func(key lru.Key, value interface{}) {
 		e := value.(*entry)
 		if atomic.LoadInt32(&e.status) == active {
